@@ -1,1 +1,1410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Ketik Kata - RDCoder</title>
+    <style>
+        :root {
+            --primary: #00ffc8;
+            --primary-dark: #00e6b8;
+            --primary-light: rgba(0, 255, 200, 0.1);
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --card-border: #2e2e2e;
+            --text: #f0f0f0;
+            --text-light: #aaaaaa;
+            --error: #ff3860;
+            --error-light: rgba(255, 56, 96, 0.1);
+            --correct: #23d160;
+            --correct-light: rgba(35, 209, 96, 0.1);
+            --warning: #ffdd57;
+            --warning-light: rgba(255, 221, 87, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', sans-serif;
+            user-select: none;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        /* Warning Banner */
+        .warning-banner {
+            background: var(--warning-light);
+            border-left: 4px solid var(--warning);
+            padding: 12px 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .warning-icon {
+            color: var(--warning);
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .warning-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+        
+        .warning-text strong {
+            color: var(--warning);
+            font-weight: 600;
+        }
+        
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            position: relative;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+        
+        .nav-item {
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            opacity: 0.7;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-item.active {
+            opacity: 1;
+            color: var(--primary);
+        }
+        
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        /* Page Styles */
+        .page {
+            width: 100vw;
+            min-height: calc(100vh - 70px);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 70px;
+            transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .page.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(30px);
+        }
+        
+        /* Register Page */
+        .register-container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border: 1px solid var(--card-border);
+            animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .register-title {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--primary), #00c8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+        
+        .input-group label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-left: 5px;
+        }
+        
+        .input-group input {
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            background: #252525;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 200, 0.2);
+        }
+        
+        .input-group .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            min-height: 16px;
+            margin-left: 5px;
+            font-weight: 500;
+        }
+        
+        .register-btn {
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            background: var(--primary);
+            color: #121212;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0, 255, 200, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .register-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 200, 0.4);
+        }
+        
+        /* Game Page */
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .game-title {
+            font-size: 2.2rem;
+            color: var(--primary);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--primary), #00c8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .game-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        .time-options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .time-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid #333;
+            background: #252525;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .time-btn.selected {
+            background: var(--primary);
+            color: #121212;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 200, 0.3);
+        }
+        
+        .kata-container {
+            font-size: 2.8rem;
+            margin: 30px 0;
+            min-height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+        
+        .kata {
+            opacity: 0.3;
+            transition: opacity 0.4s ease, transform 0.4s ease, text-shadow 0.4s ease;
+            transform: scale(0.9);
+            filter: blur(1px);
+        }
+        
+        .kata.current {
+            opacity: 1;
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(0, 255, 200, 0.7);
+            transform: scale(1.05);
+            filter: blur(0);
+            position: relative;
+        }
+        
+        .kata.current::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+            box-shadow: 0 0 10px var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .input-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .game-input {
+            width: 100%;
+            font-size: 1.8rem;
+            padding: 18px 25px;
+            border-radius: 15px;
+            border: 3px solid #333;
+            background: #252525;
+            color: var(--text);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .game-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 255, 200, 0.4);
+        }
+        
+        .game-input.error {
+            border-color: var(--error);
+            background: var(--error-light);
+        }
+        
+        .game-input.correct {
+            border-color: var(--correct);
+            background: var(--correct-light);
+        }
+        
+        .game-info {
+            display: flex;
+            gap: 40px;
+            font-size: 1.4rem;
+            margin-top: 20px;
+        }
+        
+        .game-info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .game-info-label {
+            font-size: 1rem;
+            opacity: 0.7;
+            color: var(--text-light);
+        }
+        
+        .game-info-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.8rem;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .start-btn {
+            padding: 18px 50px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 15px;
+            background: var(--primary);
+            color: #121212;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            margin-top: 30px;
+            box-shadow: 0 8px 25px rgba(0, 255, 200, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .start-btn:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 255, 200, 0.5);
+        }
+        
+        .start-btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+            color: #666;
+        }
+        
+        /* Leaderboard Page */
+        .leaderboard-container {
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+        }
+        
+        .leaderboard-title {
+            font-size: 2.2rem;
+            color: var(--primary);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--primary), #00c8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .leaderboard-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .leaderboard-time-options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .leaderboard-time-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid #333;
+            background: #252525;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .leaderboard-time-btn.selected {
+            background: var(--primary);
+            color: #121212;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 200, 0.3);
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 2px solid #333;
+            background: #252525;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 200, 0.2);
+        }
+        
+        .search-btn {
+            padding: 14px 25px;
+            border-radius: 12px;
+            border: none;
+            background: var(--primary);
+            color: #121212;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 5px 15px rgba(0, 255, 200, 0.3);
+        }
+        
+        .search-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 200, 0.4);
+        }
+        
+        .leaderboard-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .leaderboard-list {
+            list-style: none;
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #2e2e2e;
+            transition: all 0.3s ease;
+        }
+        
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+        
+        .leaderboard-item.highlight {
+            background: var(--primary-light);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin: 0 -20px;
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        .leaderboard-rank {
+            width: 50px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        .leaderboard-name {
+            flex: 1;
+            padding: 0 20px;
+            font-weight: 500;
+        }
+        
+        .leaderboard-score {
+            width: 120px;
+            text-align: right;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 50px 0;
+            opacity: 0.5;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        .user-score {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+            border: 1px solid var(--primary);
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .user-score.show {
+            display: block;
+        }
+        
+        .user-score-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .user-score-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .user-score-time {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            opacity: 0.7;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 30px 20px;
+            }
+            
+            .game-title, .leaderboard-title {
+                font-size: 1.8rem;
+            }
+            
+            .kata-container {
+                font-size: 2rem;
+                min-height: 100px;
+                gap: 10px;
+            }
+            
+            .game-input {
+                font-size: 1.4rem;
+                padding: 15px 20px;
+            }
+            
+            .game-info {
+                font-size: 1.1rem;
+                gap: 30px;
+            }
+            
+            .game-info-value {
+                font-size: 1.5rem;
+            }
+            
+            .leaderboard-item {
+                font-size: 0.9rem;
+                padding: 12px 0;
+            }
+            
+            .leaderboard-rank, .leaderboard-score {
+                font-size: 1rem;
+            }
+            
+            .nav-item {
+                padding: 10px 15px;
+                font-size: 1rem;
+            }
+            
+            .start-btn {
+                padding: 15px 40px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 25px 15px;
+            }
+            
+            .register-title {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+            
+            .game-title, .leaderboard-title {
+                font-size: 1.6rem;
+            }
+            
+            .kata-container {
+                font-size: 1.6rem;
+                min-height: 80px;
+            }
+            
+            .game-input {
+                font-size: 1.2rem;
+                padding: 12px 15px;
+            }
+            
+            .game-info {
+                gap: 20px;
+            }
+            
+            .time-options, .leaderboard-time-options {
+                gap: 8px;
+            }
+            
+            .time-btn, .leaderboard-time-btn {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+                min-width: 70px;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .search-btn {
+                width: 100%;
+            }
+            
+            .leaderboard-card {
+                padding: 20px 15px;
+            }
+            
+            .leaderboard-header {
+                font-size: 0.9rem;
+            }
+            
+            .user-score {
+                padding: 20px;
+            }
+            
+            .user-score-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Register Page (Initially shown) -->
+    <div class="register-container" id="registerPage">
+        <h1 class="register-title">Daftar Pengguna</h1>
+        <form class="register-form" id="registerForm">
+            <div class="input-group">
+                <label for="name">Nama</label>
+                <input type="text" id="name" placeholder="Masukkan nama Anda" required />
+                <div class="error-message" id="nameError"></div>
+            </div>
+            <div class="input-group">
+                <label for="age">Umur</label>
+                <input type="number" id="age" placeholder="Masukkan umur Anda" min="5" max="100" required />
+                <div class="error-message" id="ageError"></div>
+            </div>
+            
+            <!-- Warning Banner -->
+            <div class="warning-banner">
+                <div class="warning-icon">⚠️</div>
+                <div class="warning-text">
+                    <strong>PERHATIAN:</strong> Data nama dan umur hanya digunakan untuk penyimpanan skor di database game ini. 
+                    Kami tidak akan menggunakan data ini untuk tujuan lain yang melanggar hukum atau privasi. 
+                    Dengan mendaftar, Anda menyetujui penyimpanan data ini untuk keperluan leaderboard game.
+                </div>
+            </div>
+            
+            <button type="submit" class="register-btn">Mulai Bermain</button>
+        </form>
+    </div>
 
+    <!-- Main Container (Hidden initially) -->
+    <div class="container" id="mainContainer" style="display: none;">
+        <!-- Navigation -->
+        <div class="nav">
+            <div class="nav-item active" data-page="game">Game</div>
+            <div class="nav-item" data-page="leaderboard">Leaderboard</div>
+        </div>
+
+        <!-- Game Page -->
+        <div class="page" id="gamePage">
+            <div class="game-container">
+                <h1 class="game-title">Game Ketik Kata</h1>
+                <p class="game-subtitle">Uji kecepatan mengetik Anda dengan mengetik kata yang muncul secepat mungkin!</p>
+                
+                <div class="time-options" id="timeOptions">
+                    <button class="time-btn" data-time="10">10-S</button>
+                    <button class="time-btn" data-time="30">30-S</button>
+                    <button class="time-btn" data-time="60">60-S</button>
+                    <button class="time-btn" data-time="100">100-S</button>
+                    <button class="time-btn" data-time="120">120-S</button>
+                    <button class="time-btn" data-time="150">150-S</button>
+                    <button class="time-btn" data-time="180">180-S</button>
+                </div>
+                
+                <div class="kata-container" id="kataContainer">
+                    <span class="kata" id="prev2"></span>
+                    <span class="kata" id="prev1"></span>
+                    <span class="kata current" id="current"></span>
+                </div>
+                
+                <div class="input-container">
+                    <input type="text" class="game-input" id="gameInput" placeholder="Ketik kata di sini..." disabled 
+                           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                </div>
+                
+                <div class="game-info">
+                    <div class="game-info-item">
+                        <div class="game-info-label">Skor</div>
+                        <div class="game-info-value" id="scoreDisplay">0</div>
+                    </div>
+                    <div class="game-info-item">
+                        <div class="game-info-label">Waktu</div>
+                        <div class="game-info-value" id="timerDisplay">0</div>
+                    </div>
+                </div>
+                
+                <button class="start-btn" id="startBtn">Mulai Permainan</button>
+            </div>
+        </div>
+
+        <!-- Leaderboard Page -->
+        <div class="page hidden" id="leaderboardPage">
+            <div class="leaderboard-container">
+                <h1 class="leaderboard-title">Leaderboard</h1>
+                <p class="leaderboard-subtitle">Lihat peringkat pemain terbaik berdasarkan waktu permainan</p>
+                
+                <div class="leaderboard-time-options" id="leaderboardTimeOptions">
+                    <button class="leaderboard-time-btn selected" data-time="10">10-S</button>
+                    <button class="leaderboard-time-btn" data-time="30">30-S</button>
+                    <button class="leaderboard-time-btn" data-time="60">60-S</button>
+                    <button class="leaderboard-time-btn" data-time="100">100-S</button>
+                    <button class="leaderboard-time-btn" data-time="120">120-S</button>
+                    <button class="leaderboard-time-btn" data-time="150">150-S</button>
+                    <button class="leaderboard-time-btn" data-time="180">180-S</button>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Cari nama..." />
+                    <button class="search-btn" id="searchBtn">Cari</button>
+                </div>
+                
+                <div class="leaderboard-card">
+                    <div class="leaderboard-header">
+                        <div style="width: 50px;">#</div>
+                        <div style="flex: 1;">Nama</div>
+                        <div style="width: 120px;">Skor</div>
+                    </div>
+                    <ul class="leaderboard-list" id="leaderboardList">
+                        <!-- Leaderboard items will be inserted here -->
+                    </ul>
+                    <div class="no-data" id="noData">Tidak ada data leaderboard</div>
+                </div>
+                
+                <div class="user-score" id="userScore">
+                    <div class="user-score-title">Skor Tertinggi Anda</div>
+                    <div class="user-score-value" id="userScoreValue">0</div>
+                    <div class="user-score-time" id="userScoreTime">Mode: 10-S</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
+    <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto"></audio>
+    <audio id="endSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
+    <script>
+        // Game Data
+        const kataList = [
+            "langit", "pelangi", "senja", "kopi", "hujan",
+            "senyum", "pagi", "malam", "rindu", "teman",
+            "indah", "kucing", "jalanan", "musik", "lelah",
+            "semangat", "bintang", "sunyi", "ceria", "damai",
+            "api", "bulan", "daun", "embun", "fajar",
+            "gelombang", "hati", "ilmu", "jantung", "kaca",
+            "laut", "matahari", "nyanyi", "ombak", "pelukan",
+            "rasa", "senandung", "tanah", "udara", "warna","meja", "kursi", "buku", "pensil", "pulpen", "tas", "sepatu", "baju", "celana", "topi",
+"rumah", "pintu", "jendela", "lantai", "dinding", "atap", "kasur", "bantal", "selimut", "lemari",
+"piring", "sendok", "garpu", "gelas", "mangkuk", "panci", "wajan", "kompor", "kulkas", "oven",
+"mobil", "motor", "sepeda", "kereta", "bus", "truk", "pesawat", "kapal", "perahu", "helikopter",
+"komputer", "laptop", "printer", "scanner", "monitor", "keyboard", "mouse", "kamera", "telepon", "radio",
+"televisi", "lampu", "kipas", "ac", "pemanas", "speaker", "mikrofon", "proyektor", "charger", "baterai",
+"jam", "kalender", "peta", "kalkulator", "penggaris", "penghapus", "stapler", "klip", "lem", "gunting",
+"paku", "obeng", "martil", "gergaji", "bor", "tang", "kunci", "sekrup", "mur", "baut",
+"bunga", "pohon", "daun", "akar", "ranting", "batang", "buah", "biji", "rumput", "semak",
+"gunung", "bukit", "lembah", "sungai", "danau", "laut", "pantai", "pulau", "gua", "air terjun",
+"awan", "angin", "petir", "kilat", "badai", "salju", "es", "kabut", "embun", "cuaca",
+"matahari", "bulan", "bintang", "planet", "galaksi", "komet", "meteor", "asteroid", "langit", "angkasa","hewan", "kucing", "anjing", "burung", "ikan", "sapi", "kuda", "gajah", "harimau", "singa",
+"ular", "kadal", "katak", "kupu-kupu", "lebah", "semut", "nyamuk", "lalat", "kecoa", "tikus",
+"manusia", "anak", "laki-laki", "perempuan", "pria", "wanita", "bayi", "remaja", "dewasa", "orang tua",
+"guru", "dokter", "perawat", "polisi", "tentara", "petani", "nelayan", "pedagang", "pengusaha", "karyawan",
+"presiden", "menteri", "gubernur", "wali kota", "bupati", "anggota", "ketua", "sekretaris", "bendahara", "anggota dewan",
+"sekolah", "kelas", "ruang", "kantor", "laboratorium", "perpustakaan", "aula", "lapangan", "kantin", "toilet",
+"universitas", "fakultas", "jurusan", "dosen", "mahasiswa", "kuliah", "skripsi", "tesis", "disertasi", "seminar",
+"buku", "majalah", "koran", "artikel", "cerita", "novel", "puisi", "komik", "ensiklopedia", "kamus",
+"musik", "lagu", "nada", "irama", "melodi", "ritme", "genre", "album", "konser", "panggung",
+"film", "bioskop", "aktor", "aktris", "sutradara", "produser", "naskah", "adegan", "kamera", "editor",
+"olahraga", "sepak bola", "basket", "voli", "tenis", "bulu tangkis", "renang", "lari", "bersepeda", "angkat besi",
+"makanan", "minuman", "nasi", "roti", "daging", "sayur", "buah", "susu", "air", "teh","kopi", "jus", "soda", "es krim", "kue", "permen", "cokelat", "keripik", "mie", "sup",
+"pakaian", "baju", "celana", "rok", "kemeja", "kaos", "jaket", "jas", "dasi", "sepatu",
+"sendal", "kaus kaki", "topi", "sarung tangan", "syal", "ikat pinggang", "kacamata", "jam tangan", "perhiasan", "tas",
+"alat tulis", "pena", "pensil", "penghapus", "penggaris", "spidol", "stapler", "klip", "lem", "gunting",
+"alat dapur", "panci", "wajan", "kompor", "oven", "kulkas", "blender", "mixer", "rice cooker", "toaster",
+"alat mandi", "sabun", "sampo", "sikat gigi", "pasta gigi", "handuk", "shower", "bathtub", "keran", "cermin",
+"alat kebersihan", "sapu", "pengki", "pel", "ember", "lap", "vacuum cleaner", "duster", "sikat", "detergen",
+"alat pertukangan", "martil", "obeng", "tang", "gergaji", "bor", "kunci inggris", "meteran", "paku", "sekrup",
+"alat musik", "gitar", "piano", "biola", "drum", "saxofon", "terompet", "seruling", "harmonika", "tamborin",
+"alat elektronik", "televisi", "radio", "komputer", "laptop", "printer", "scanner", "kamera", "telepon", "tablet",
+"alat transportasi", "mobil", "motor", "sepeda", "kereta", "bus", "truk", "pesawat", "kapal", "perahu", "helikopter",
+"tempat umum", "pasar", "toko", "mall", "restoran", "kafe", "hotel", "rumah sakit", "sekolah", "kantor", "bank","tempat ibadah", "masjid", "gereja", "pura", "vihara", "klenteng", "kapel", "sinagoga", "katedral", "monasteri", "kuil",
+"tempat wisata", "pantai", "gunung"        ];
+
+        // DOM Elements
+        const registerPage = document.getElementById('registerPage');
+        const registerForm = document.getElementById('registerForm');
+        const nameInput = document.getElementById('name');
+        const ageInput = document.getElementById('age');
+        const nameError = document.getElementById('nameError');
+        const ageError = document.getElementById('ageError');
+        const mainContainer = document.getElementById('mainContainer');
+        
+        // Game Elements
+        const gamePage = document.getElementById('gamePage');
+        const leaderboardPage = document.getElementById('leaderboardPage');
+        const navItems = document.querySelectorAll('.nav-item');
+        const prev2Elem = document.getElementById('prev2');
+        const prev1Elem = document.getElementById('prev1');
+        const currentElem = document.getElementById('current');
+        const gameInput = document.getElementById('gameInput');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const timeOptions = document.getElementById('timeOptions');
+        const timeBtns = document.querySelectorAll('.time-btn');
+        
+        // Leaderboard Elements
+        const leaderboardTimeOptions = document.getElementById('leaderboardTimeOptions');
+        const leaderboardTimeBtns = document.querySelectorAll('.leaderboard-time-btn');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const leaderboardList = document.getElementById('leaderboardList');
+        const noData = document.getElementById('noData');
+        const userScore = document.getElementById('userScore');
+        const userScoreValue = document.getElementById('userScoreValue');
+        const userScoreTime = document.getElementById('userScoreTime');
+        
+        // Audio Elements
+        const correctSound = document.getElementById('correctSound');
+        const wrongSound = document.getElementById('wrongSound');
+        const endSound = document.getElementById('endSound');
+        
+        // Game State
+        let currentUser = null;
+        let selectedTime = 10;
+        let score = 0;
+        let timeLeft = 0;
+        let timerInterval = null;
+        let prevWords = [];
+        let currentLeaderboardTime = 10;
+        
+        // Initialize the app
+        init();
+        
+        function init() {
+            // Check if user data exists in localStorage
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                registerPage.style.display = 'none';
+                mainContainer.style.display = 'flex';
+                loadLeaderboard(currentLeaderboardTime);
+            }
+            
+            setupEventListeners();
+        }
+        
+        function setupEventListeners() {
+            // Register Form
+            registerForm.addEventListener('submit', handleRegister);
+            
+            // Navigation
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const page = item.getAttribute('data-page');
+                    switchPage(page);
+                });
+            });
+            
+            // Game Time Selection
+            timeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    timeBtns.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedTime = parseInt(btn.getAttribute('data-time'));
+                });
+            });
+            
+            // Leaderboard Time Selection
+            leaderboardTimeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    leaderboardTimeBtns.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    currentLeaderboardTime = parseInt(btn.getAttribute('data-time'));
+                    loadLeaderboard(currentLeaderboardTime);
+                });
+            });
+            
+            // Start Game Button
+            startBtn.addEventListener('click', startGame);
+            
+            // Game Input
+            gameInput.addEventListener('input', handleInput);
+            
+            // Search Button
+            searchBtn.addEventListener('click', searchUser);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchUser();
+                }
+            });
+            
+            // Swipe navigation
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            document.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, false);
+            
+            document.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, false);
+            
+            // Keyboard navigation for testing
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    switchPage('game');
+                } else if (e.key === 'ArrowRight') {
+                    switchPage('leaderboard');
+                }
+            });
+        }
+        
+        function handleRegister(e) {
+            e.preventDefault();
+            
+            const name = nameInput.value.trim();
+            const age = ageInput.value.trim();
+            
+            // Validate inputs
+            let isValid = true;
+            
+            if (name.length < 3) {
+                nameError.textContent = 'Nama harus minimal 3 karakter';
+                isValid = false;
+            } else {
+                nameError.textContent = '';
+            }
+            
+            if (!age || isNaN(age)) {
+                ageError.textContent = 'Umur harus berupa angka';
+                isValid = false;
+            } else if (parseInt(age) < 5 || parseInt(age) > 100) {
+                ageError.textContent = 'Umur harus antara 5 dan 100';
+                isValid = false;
+            } else {
+                ageError.textContent = '';
+            }
+            
+            if (!isValid) return;
+            
+            // Check if name already exists
+            checkNameExists(name).then(exists => {
+                if (exists) {
+                    nameError.textContent = 'Nama sudah digunakan, silakan pilih nama lain';
+                    return;
+                }
+                
+                // Create user object
+                currentUser = {
+                    name: name,
+                    age: parseInt(age),
+                    timestamp: Date.now()
+                };
+                
+                // Save user to localStorage
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // Save user to user.json (simulated)
+                saveUserToFile(currentUser);
+                
+                // Hide register page and show main container
+                registerPage.style.display = 'none';
+                mainContainer.style.display = 'flex';
+                
+                // Load initial leaderboard
+                loadLeaderboard(currentLeaderboardTime);
+            });
+        }
+        
+        function checkNameExists(name) {
+            return new Promise((resolve) => {
+                // In a real app, this would check with the server
+                // For this demo, we'll check localStorage
+                const users = JSON.parse(localStorage.getItem('users') || '{}';
+                resolve(users.hasOwnProperty(name));
+            });
+        }
+        
+        function saveUserToFile(user) {
+            // In a real app, this would send data to server to save to file
+            // For this demo, we'll save to localStorage
+            const users = JSON.parse(localStorage.getItem('users') || {});
+            users[user.name] = {
+                age: user.age,
+                timestamp: user.timestamp
+            };
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        
+        function switchPage(page) {
+            navItems.forEach(item => {
+                if (item.getAttribute('data-page') === page) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            if (page === 'game') {
+                gamePage.classList.remove('hidden');
+                leaderboardPage.classList.add('hidden');
+            } else if (page === 'leaderboard') {
+                gamePage.classList.add('hidden');
+                leaderboardPage.classList.remove('hidden');
+            }
+        }
+        
+        function handleSwipe() {
+            const threshold = 50;
+            const difference = touchStartX - touchEndX;
+            
+            if (Math.abs(difference) < threshold) return;
+            
+            if (difference > 0) {
+                // Swipe left - go to leaderboard
+                if (!leaderboardPage.classList.contains('hidden')) return;
+                switchPage('leaderboard');
+            } else {
+                // Swipe right - go to game
+                if (!gamePage.classList.contains('hidden')) return;
+                switchPage('game');
+            }
+        }
+        
+        function startGame() {
+            // Check if time is selected
+            if (!selectedTime) {
+                alert('Silakan pilih waktu terlebih dahulu');
+                return;
+            }
+            
+            // Reset game state
+            score = 0;
+            timeLeft = selectedTime;
+            prevWords = [];
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            timerDisplay.textContent = timeLeft;
+            gameInput.disabled = false;
+            gameInput.value = '';
+            gameInput.classList.remove('error', 'correct');
+            gameInput.focus();
+            startBtn.disabled = true;
+            
+            // Get first word
+            updateWords(getRandomWord());
+            
+            // Start timer
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+        
+        function getRandomWord() {
+            return kataList[Math.floor(Math.random() * kataList.length)];
+        }
+        
+        function updateWords(newWord) {
+            prevWords.push(newWord);
+            if (prevWords.length > 3) prevWords.shift();
+            
+            prev2Elem.textContent = prevWords[0] || '';
+            prev1Elem.textContent = prevWords[1] || '';
+            currentElem.textContent = prevWords[2] || '';
+            
+            // Add fade-in animation
+            prev2Elem.classList.add('fade-in');
+            prev1Elem.classList.add('fade-in');
+            currentElem.classList.add('fade-in');
+            
+            setTimeout(() => {
+                prev2Elem.classList.remove('fade-in');
+                prev1Elem.classList.remove('fade-in');
+                currentElem.classList.remove('fade-in');
+            }, 500);
+        }
+        
+        function handleInput() {
+            const val = gameInput.value.trim();
+            const currentWord = currentElem.textContent;
+            
+            if (currentWord.startsWith(val)) {
+                gameInput.classList.remove('error');
+                gameInput.classList.add('correct');
+            } else {
+                gameInput.classList.remove('correct');
+                gameInput.classList.add('error');
+                wrongSound.play();
+            }
+            
+            if (val === currentWord) {
+                // Correct word
+                score++;
+                scoreDisplay.textContent = score;
+                correctSound.play();
+                gameInput.value = '';
+                gameInput.classList.remove('error', 'correct');
+                updateWords(getRandomWord());
+            }
+        }
+        
+        function endGame() {
+            clearInterval(timerInterval);
+            gameInput.disabled = true;
+            startBtn.disabled = false;
+            endSound.play();
+            
+            // Save score to leaderboard
+            saveScore(score, selectedTime);
+        }
+        
+        function saveScore(score, timeMode) {
+            if (!currentUser) return;
+            
+            // In a real app, this would send data to server to save to file
+            // For this demo, we'll save to localStorage
+            
+            const leaderboardKey = getLeaderboardKey(timeMode);
+            let leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || {};
+            
+            // Only save if this is a new high score for this user
+            if (!leaderboard[currentUser.name] || leaderboard[currentUser.name].score < score) {
+                leaderboard[currentUser.name] = {
+                    score: score,
+                    timestamp: Date.now(),
+                    timeMode: timeMode
+                };
+                
+                localStorage.setItem(leaderboardKey, JSON.stringify(leaderboard));
+            }
+            
+            // Reload leaderboard if we're on that page
+            if (leaderboardPage.classList.contains('hidden')) return;
+            loadLeaderboard(currentLeaderboardTime);
+        }
+        
+        function loadLeaderboard(timeMode) {
+            const leaderboardKey = getLeaderboardKey(timeMode);
+            const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || {};
+            
+            // Convert to array and sort by score (descending)
+            const leaderboardArray = Object.entries(leaderboard).map(([name, data]) => ({
+                name,
+                score: data.score,
+                timestamp: data.timestamp,
+                timeMode: data.timeMode
+            })).sort((a, b) => b.score - a.score || a.timestamp - b.timestamp);
+            
+            // Update UI
+            leaderboardList.innerHTML = '';
+            
+            if (leaderboardArray.length === 0) {
+                noData.style.display = 'block';
+                userScore.classList.remove('show');
+                return;
+            }
+            
+            noData.style.display = 'none';
+            
+            leaderboardArray.forEach((entry, index) => {
+                const li = document.createElement('li');
+                li.className = 'leaderboard-item';
+                if (currentUser && entry.name === currentUser.name) {
+                    li.classList.add('highlight');
+                }
+                
+                li.innerHTML = `
+                    <div class="leaderboard-rank">${index + 1}</div>
+                    <div class="leaderboard-name">${entry.name}</div>
+                    <div class="leaderboard-score">${entry.score}</div>
+                `;
+                
+                leaderboardList.appendChild(li);
+            });
+            
+            // Show current user's score if available
+            if (currentUser && leaderboard[currentUser.name]) {
+                userScoreValue.textContent = leaderboard[currentUser.name].score;
+                userScoreTime.textContent = `Mode: ${leaderboard[currentUser.name].timeMode || timeMode}-S`;
+                userScore.classList.add('show');
+            } else {
+                userScore.classList.remove('show');
+            }
+        }
+        
+        function searchUser() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            if (!searchTerm) return;
+            
+            const leaderboardKey = getLeaderboardKey(currentLeaderboardTime);
+            const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || {};
+            
+            // Find user in leaderboard
+            const userEntry = Object.entries(leaderboard).find(([name]) => 
+                name.toLowerCase() === searchTerm
+            );
+            
+            if (userEntry) {
+                const [name, data] = userEntry;
+                
+                // Highlight the user in the list
+                const items = leaderboardList.querySelectorAll('.leaderboard-item');
+                items.forEach(item => {
+                    item.classList.remove('highlight');
+                    const itemName = item.querySelector('.leaderboard-name').textContent;
+                    if (itemName === name) {
+                        item.classList.add('highlight');
+                        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+                
+                // Show user score
+                userScoreValue.textContent = data.score;
+                userScoreTime.textContent = `Mode: ${data.timeMode || currentLeaderboardTime}-S`;
+                userScore.classList.add('show');
+            } else {
+                alert('Nama tidak ditemukan di leaderboard');
+                userScore.classList.remove('show');
+            }
+        }
+        
+        function getLeaderboardKey(timeMode) {
+            const timeModes = {
+                10: 'leaderboard',
+                30: 'leaderboard1',
+                60: 'leaderboard2',
+                100: 'leaderboard3',
+                120: 'leaderboard4',
+                150: 'leaderboard5',
+                180: 'leaderboard6'
+            };
+            
+            return timeModes[timeMode] || 'leaderboard';
+        }
+    </script>
+</body>
+</html>
