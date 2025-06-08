@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Game Ketik Kata - RDCoder</title>
+    <title>Typing Speed Test - ZKYBYTE</title>
     <style>
         :root {
             --primary: #00ffc8;
@@ -893,12 +893,11 @@
         </div>
     </div>
 
-    <!-- Audio Elements -->
-    <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
-    <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto"></audio>
-    <audio id="endSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
-
     <script>
+        // JSONBin.io Configuration
+        const JSONBIN_API_KEY = '$2a$10$fb8zIX6sIhMi2x/YDVQ5ZuE5a0ekG8V/C/0ZazOBSna3y1YvL4L0u';
+        const JSONBIN_BIN_ID = '6844c196d62dc04f2a8f174d';
+        
         // Game Data
         const kataList = [
             "langit", "pelangi", "senja", "kopi", "hujan",
@@ -909,40 +908,41 @@
             "gelombang", "hati", "ilmu", "jantung", "kaca",
             "laut", "matahari", "nyanyi", "ombak", "pelukan",
             "rasa", "senandung", "tanah", "udara", "warna","meja", "kursi", "buku", "pensil", "pulpen", "tas", "sepatu", "baju", "celana", "topi",
-"rumah", "pintu", "jendela", "lantai", "dinding", "atap", "kasur", "bantal", "selimut", "lemari",
-"piring", "sendok", "garpu", "gelas", "mangkuk", "panci", "wajan", "kompor", "kulkas", "oven",
-"mobil", "motor", "sepeda", "kereta", "bus", "truk", "pesawat", "kapal", "perahu", "helikopter",
-"komputer", "laptop", "printer", "scanner", "monitor", "keyboard", "mouse", "kamera", "telepon", "radio",
-"televisi", "lampu", "kipas", "ac", "pemanas", "speaker", "mikrofon", "proyektor", "charger", "baterai",
-"jam", "kalender", "peta", "kalkulator", "penggaris", "penghapus", "stapler", "klip", "lem", "gunting",
-"paku", "obeng", "martil", "gergaji", "bor", "tang", "kunci", "sekrup", "mur", "baut",
-"bunga", "pohon", "daun", "akar", "ranting", "batang", "buah", "biji", "rumput", "semak",
-"gunung", "bukit", "lembah", "sungai", "danau", "laut", "pantai", "pulau", "gua", "air terjun",
-"awan", "angin", "petir", "kilat", "badai", "salju", "es", "kabut", "embun", "cuaca",
-"matahari", "bulan", "bintang", "planet", "galaksi", "komet", "meteor", "asteroid", "langit", "angkasa","hewan", "kucing", "anjing", "burung", "ikan", "sapi", "kuda", "gajah", "harimau", "singa",
-"ular", "kadal", "katak", "kupu-kupu", "lebah", "semut", "nyamuk", "lalat", "kecoa", "tikus",
-"manusia", "anak", "laki-laki", "perempuan", "pria", "wanita", "bayi", "remaja", "dewasa", "orang tua",
-"guru", "dokter", "perawat", "polisi", "tentara", "petani", "nelayan", "pedagang", "pengusaha", "karyawan",
-"presiden", "menteri", "gubernur", "wali kota", "bupati", "anggota", "ketua", "sekretaris", "bendahara", "anggota dewan",
-"sekolah", "kelas", "ruang", "kantor", "laboratorium", "perpustakaan", "aula", "lapangan", "kantin", "toilet",
-"universitas", "fakultas", "jurusan", "dosen", "mahasiswa", "kuliah", "skripsi", "tesis", "disertasi", "seminar",
-"buku", "majalah", "koran", "artikel", "cerita", "novel", "puisi", "komik", "ensiklopedia", "kamus",
-"musik", "lagu", "nada", "irama", "melodi", "ritme", "genre", "album", "konser", "panggung",
-"film", "bioskop", "aktor", "aktris", "sutradara", "produser", "naskah", "adegan", "kamera", "editor",
-"olahraga", "sepak bola", "basket", "voli", "tenis", "bulu tangkis", "renang", "lari", "bersepeda", "angkat besi",
-"makanan", "minuman", "nasi", "roti", "daging", "sayur", "buah", "susu", "air", "teh","kopi", "jus", "soda", "es krim", "kue", "permen", "cokelat", "keripik", "mie", "sup",
-"pakaian", "baju", "celana", "rok", "kemeja", "kaos", "jaket", "jas", "dasi", "sepatu",
-"sendal", "kaus kaki", "topi", "sarung tangan", "syal", "ikat pinggang", "kacamata", "jam tangan", "perhiasan", "tas",
-"alat tulis", "pena", "pensil", "penghapus", "penggaris", "spidol", "stapler", "klip", "lem", "gunting",
-"alat dapur", "panci", "wajan", "kompor", "oven", "kulkas", "blender", "mixer", "rice cooker", "toaster",
-"alat mandi", "sabun", "sampo", "sikat gigi", "pasta gigi", "handuk", "shower", "bathtub", "keran", "cermin",
-"alat kebersihan", "sapu", "pengki", "pel", "ember", "lap", "vacuum cleaner", "duster", "sikat", "detergen",
-"alat pertukangan", "martil", "obeng", "tang", "gergaji", "bor", "kunci inggris", "meteran", "paku", "sekrup",
-"alat musik", "gitar", "piano", "biola", "drum", "saxofon", "terompet", "seruling", "harmonika", "tamborin",
-"alat elektronik", "televisi", "radio", "komputer", "laptop", "printer", "scanner", "kamera", "telepon", "tablet",
-"alat transportasi", "mobil", "motor", "sepeda", "kereta", "bus", "truk", "pesawat", "kapal", "perahu", "helikopter",
-"tempat umum", "pasar", "toko", "mall", "restoran", "kafe", "hotel", "rumah sakit", "sekolah", "kantor", "bank","tempat ibadah", "masjid", "gereja", "pura", "vihara", "klenteng", "kapel", "sinagoga", "katedral", "monasteri", "kuil",
-"tempat wisata", "pantai", "gunung"        ];
+            "rumah", "pintu", "jendela", "lantai", "dinding", "atap", "kasur", "bantal", "selimut", "lemari",
+            "piring", "sendok", "garpu", "gelas", "mangkuk", "panci", "wajan", "kompor", "kulkas", "oven",
+            "mobil", "motor", "sepeda", "kereta", "bus", "truk", "pesawat", "kapal", "perahu", "helikopter",
+            "komputer", "laptop", "printer", "scanner", "monitor", "keyboard", "mouse", "kamera", "telepon", "radio",
+            "televisi", "lampu", "kipas", "ac", "pemanas", "speaker", "mikrofon", "proyektor", "charger", "baterai",
+            "jam", "kalender", "peta", "kalkulator", "penggaris", "penghapus", "stapler", "klip", "lem", "gunting",
+            "paku", "obeng", "martil", "gergaji", "bor", "tang", "kunci", "sekrup", "mur", "baut",
+            "bunga", "pohon", "daun", "akar", "ranting", "batang", "buah", "biji", "rumput", "semak",
+            "gunung", "bukit", "lembah", "sungai", "danau", "laut", "pantai", "pulau", "gua", "air terjun",
+            "awan", "angin", "petir", "kilat", "badai", "salju", "es", "kabut", "embun", "cuaca",
+            "matahari", "bulan", "bintang", "planet", "galaksi", "komet", "meteor", "asteroid", "langit", "angkasa","hewan", "kucing", "anjing", "burung", "ikan", "sapi", "kuda", "gajah", "harimau", "singa",
+            "ular", "kadal", "katak", "kupu-kupu", "lebah", "semut", "nyamuk", "lalat", "kecoa", "tikus",
+            "manusia", "anak", "laki-laki", "perempuan", "pria", "wanita", "bayi", "remaja", "dewasa", "orang tua",
+            "guru", "dokter", "perawat", "polisi", "tentara", "petani", "nelayan", "pedagang", "pengusaha", "karyawan",
+            "presiden", "menteri", "gubernur", "wali kota", "bupati", "anggota", "ketua", "sekretaris", "bendahara", "anggota dewan",
+            "sekolah", "kelas", "ruang", "kantor", "laboratorium", "perpustakaan", "aula", "lapangan", "kantin", "toilet",
+            "universitas", "fakultas", "jurusan", "dosen", "mahasiswa", "kuliah", "skripsi", "tesis", "disertasi", "seminar",
+            "buku", "majalah", "koran", "artikel", "cerita", "novel", "puisi", "komik", "ensiklopedia", "kamus",
+            "musik", "lagu", "nada", "irama", "melodi", "ritme", "genre", "album", "konser", "panggung",
+            "film", "bioskop", "aktor", "aktris", "sutradara", "produser", "naskah", "adegan", "kamera", "editor",
+            "olahraga", "sepak bola", "basket", "voli", "tenis", "bulu tangkis", "renang", "lari", "bersepeda", "angkat besi",
+            "makanan", "minuman", "nasi", "roti", "daging", "sayur", "buah", "susu", "air", "teh","kopi", "jus", "soda", "es krim", "kue", "permen", "cokelat", "keripik", "mie", "sup",
+            "pakaian", "baju", "celana", "rok", "kemeja", "kaos", "jaket", "jas", "dasi", "sepatu",
+            "sendal", "kaus kaki", "topi", "sarung tangan", "syal", "ikat pinggang", "kacamata", "jam tangan", "perhiasan", "tas",
+            "alat tulis", "pena", "pensil", "penghapus", "penggaris", "spidol", "stapler", "klip", "lem", "gunting",
+            "alat dapur", "panci", "wajan", "kompor", "oven", "kulkas", "blender", "mixer", "rice cooker", "toaster",
+            "alat mandi", "sabun", "sampo", "sikat gigi", "pasta gigi", "handuk", "shower", "bathtub", "keran", "cermin",
+            "alat kebersihan", "sapu", "pengki", "pel", "ember", "lap", "vacuum cleaner", "duster", "sikat", "detergen",
+            "alat pertukangan", "martil", "obeng", "tang", "gergaji", "bor", "kunci inggris", "meteran", "paku", "sekrup",
+            "alat musik", "gitar", "piano", "biola", "drum", "saxofon", "terompet", "seruling", "harmonika", "tamborin",
+            "alat elektronik", "televisi", "radio", "komputer", "laptop", "printer", "scanner", "kamera", "telepon", "tablet",
+            "alat transportasi", "mobil", "motor", "sepeda", "kereta", "bus", "truk", "pesawat", "kapal", "perahu", "helikopter",
+            "tempat umum", "pasar", "toko", "mall", "restoran", "kafe", "hotel", "rumah sakit", "sekolah", "kantor", "bank","tempat ibadah", "masjid", "gereja", "pura", "vihara", "klenteng", "kapel", "sinagoga", "katedral", "monasteri", "kuil",
+            "tempat wisata", "pantai", "gunung"
+        ];
 
         // DOM Elements
         const registerPage = document.getElementById('registerPage');
@@ -977,11 +977,6 @@
         const userScore = document.getElementById('userScore');
         const userScoreValue = document.getElementById('userScoreValue');
         const userScoreTime = document.getElementById('userScoreTime');
-        
-        // Audio Elements
-        const correctSound = document.getElementById('correctSound');
-        const wrongSound = document.getElementById('wrongSound');
-        const endSound = document.getElementById('endSound');
         
         // Game State
         let currentUser = null;
@@ -1052,31 +1047,9 @@
                     searchUser();
                 }
             });
-            
-            // Swipe navigation
-            let touchStartX = 0;
-            let touchEndX = 0;
-            
-            document.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            }, false);
-            
-            document.addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            }, false);
-            
-            // Keyboard navigation for testing
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') {
-                    switchPage('game');
-                } else if (e.key === 'ArrowRight') {
-                    switchPage('leaderboard');
-                }
-            });
         }
-        
-        function handleRegister(e) {
+
+        async function handleRegister(e) {
             e.preventDefault();
             
             const name = nameInput.value.trim();
@@ -1105,24 +1078,25 @@
             if (!isValid) return;
             
             // Check if name already exists
-            checkNameExists(name).then(exists => {
-                if (exists) {
-                    nameError.textContent = 'Nama sudah digunakan, silakan pilih nama lain';
-                    return;
-                }
+            const nameExists = await checkNameExists(name);
+            if (nameExists) {
+                nameError.textContent = 'Nama sudah digunakan, silakan pilih nama lain';
+                return;
+            }
+            
+            // Create user object
+            currentUser = {
+                name: name,
+                age: parseInt(age),
+                timestamp: Date.now()
+            };
+            
+            try {
+                // Save to JSONBin.io
+                await saveUserData(currentUser);
                 
-                // Create user object
-                currentUser = {
-                    name: name,
-                    age: parseInt(age),
-                    timestamp: Date.now()
-                };
-                
-                // Save user to localStorage
+                // Save to localStorage
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
-                // Save user to user.json (simulated)
-                saveUserToFile(currentUser);
                 
                 // Hide register page and show main container
                 registerPage.style.display = 'none';
@@ -1130,196 +1104,182 @@
                 
                 // Load initial leaderboard
                 loadLeaderboard(currentLeaderboardTime);
-            });
-        }
-        
-        function checkNameExists(name) {
-            return new Promise((resolve) => {
-                // In a real app, this would check with the server
-                // For this demo, we'll check localStorage
-                const users = JSON.parse(localStorage.getItem('users') || '{}';
-                resolve(users.hasOwnProperty(name));
-            });
-        }
-        
-        function saveUserToFile(user) {
-            // In a real app, this would send data to server to save to file
-            // For this demo, we'll save to localStorage
-            const users = JSON.parse(localStorage.getItem('users') || {});
-            users[user.name] = {
-                age: user.age,
-                timestamp: user.timestamp
-            };
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-        
-        function switchPage(page) {
-            navItems.forEach(item => {
-                if (item.getAttribute('data-page') === page) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-            
-            if (page === 'game') {
-                gamePage.classList.remove('hidden');
-                leaderboardPage.classList.add('hidden');
-            } else if (page === 'leaderboard') {
-                gamePage.classList.add('hidden');
-                leaderboardPage.classList.remove('hidden');
-            }
-        }
-        
-        function handleSwipe() {
-            const threshold = 50;
-            const difference = touchStartX - touchEndX;
-            
-            if (Math.abs(difference) < threshold) return;
-            
-            if (difference > 0) {
-                // Swipe left - go to leaderboard
-                if (!leaderboardPage.classList.contains('hidden')) return;
-                switchPage('leaderboard');
-            } else {
-                // Swipe right - go to game
-                if (!gamePage.classList.contains('hidden')) return;
-                switchPage('game');
-            }
-        }
-        
-        function startGame() {
-            // Check if time is selected
-            if (!selectedTime) {
-                alert('Silakan pilih waktu terlebih dahulu');
-                return;
-            }
-            
-            // Reset game state
-            score = 0;
-            timeLeft = selectedTime;
-            prevWords = [];
-            
-            // Update UI
-            scoreDisplay.textContent = score;
-            timerDisplay.textContent = timeLeft;
-            gameInput.disabled = false;
-            gameInput.value = '';
-            gameInput.classList.remove('error', 'correct');
-            gameInput.focus();
-            startBtn.disabled = true;
-            
-            // Get first word
-            updateWords(getRandomWord());
-            
-            // Start timer
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                timerDisplay.textContent = timeLeft;
                 
-                if (timeLeft <= 0) {
-                    endGame();
+                // Switch to game page
+                switchPage('game');
+            } catch (error) {
+                console.error('Error saving user:', error);
+                nameError.textContent = 'Gagal menyimpan data, coba lagi';
+            }
+        }
+
+        async function checkNameExists(name) {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                    headers: {
+                        'X-Master-Key': JSONBIN_API_KEY
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
                 }
-            }, 1000);
-        }
-        
-        function getRandomWord() {
-            return kataList[Math.floor(Math.random() * kataList.length)];
-        }
-        
-        function updateWords(newWord) {
-            prevWords.push(newWord);
-            if (prevWords.length > 3) prevWords.shift();
-            
-            prev2Elem.textContent = prevWords[0] || '';
-            prev1Elem.textContent = prevWords[1] || '';
-            currentElem.textContent = prevWords[2] || '';
-            
-            // Add fade-in animation
-            prev2Elem.classList.add('fade-in');
-            prev1Elem.classList.add('fade-in');
-            currentElem.classList.add('fade-in');
-            
-            setTimeout(() => {
-                prev2Elem.classList.remove('fade-in');
-                prev1Elem.classList.remove('fade-in');
-                currentElem.classList.remove('fade-in');
-            }, 500);
-        }
-        
-        function handleInput() {
-            const val = gameInput.value.trim();
-            const currentWord = currentElem.textContent;
-            
-            if (currentWord.startsWith(val)) {
-                gameInput.classList.remove('error');
-                gameInput.classList.add('correct');
-            } else {
-                gameInput.classList.remove('correct');
-                gameInput.classList.add('error');
-                wrongSound.play();
-            }
-            
-            if (val === currentWord) {
-                // Correct word
-                score++;
-                scoreDisplay.textContent = score;
-                correctSound.play();
-                gameInput.value = '';
-                gameInput.classList.remove('error', 'correct');
-                updateWords(getRandomWord());
+                
+                const data = await response.json();
+                const users = data.record?.users || {};
+                return users.hasOwnProperty(name);
+            } catch (error) {
+                console.error('Error checking name:', error);
+                // Fallback to localStorage
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                return users.hasOwnProperty(name);
             }
         }
-        
-        function endGame() {
-            clearInterval(timerInterval);
-            gameInput.disabled = true;
-            startBtn.disabled = false;
-            endSound.play();
-            
-            // Save score to leaderboard
-            saveScore(score, selectedTime);
-        }
-        
-        function saveScore(score, timeMode) {
-            if (!currentUser) return;
-            
-            // In a real app, this would send data to server to save to file
-            // For this demo, we'll save to localStorage
-            
-            const leaderboardKey = getLeaderboardKey(timeMode);
-            let leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || {};
-            
-            // Only save if this is a new high score for this user
-            if (!leaderboard[currentUser.name] || leaderboard[currentUser.name].score < score) {
-                leaderboard[currentUser.name] = {
-                    score: score,
-                    timestamp: Date.now(),
-                    timeMode: timeMode
+
+        async function saveUserData(user) {
+            try {
+                // First get existing data
+                const existingData = await getJSONBinData();
+                
+                // Update users data
+                const updatedData = {
+                    ...existingData,
+                    users: {
+                        ...(existingData.users || {}),
+                        [user.name]: user
+                    }
                 };
                 
-                localStorage.setItem(leaderboardKey, JSON.stringify(leaderboard));
+                // Save to JSONBin.io
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_API_KEY
+                    },
+                    body: JSON.stringify(updatedData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to save user data');
+                }
+                
+                // Also save to localStorage as fallback
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                users[user.name] = user;
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error saving user:', error);
+                throw error;
             }
-            
-            // Reload leaderboard if we're on that page
-            if (leaderboardPage.classList.contains('hidden')) return;
-            loadLeaderboard(currentLeaderboardTime);
         }
-        
-        function loadLeaderboard(timeMode) {
-            const leaderboardKey = getLeaderboardKey(timeMode);
-            const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || {};
+
+        async function getJSONBinData() {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                    headers: {
+                        'X-Master-Key': JSONBIN_API_KEY
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                
+                const data = await response.json();
+                return data.record || {};
+            } catch (error) {
+                console.error('Error getting data:', error);
+                return {};
+            }
+        }
+
+        async function saveScore(score, timeMode) {
+            if (!currentUser) return;
             
-            // Convert to array and sort by score (descending)
-            const leaderboardArray = Object.entries(leaderboard).map(([name, data]) => ({
-                name,
-                score: data.score,
-                timestamp: data.timestamp,
-                timeMode: data.timeMode
-            })).sort((a, b) => b.score - a.score || a.timestamp - b.timestamp);
+            const scoreData = {
+                name: currentUser.name,
+                age: currentUser.age,
+                score: score,
+                timestamp: Date.now(),
+                timeMode: timeMode
+            };
             
-            // Update UI
+            try {
+                // First get existing data
+                const existingData = await getJSONBinData();
+                
+                // Create leaderboard key based on time mode
+                const leaderboardKey = `leaderboard_${timeMode}`;
+                
+                // Update leaderboard data
+                const updatedData = {
+                    ...existingData,
+                    leaderboards: {
+                        ...(existingData.leaderboards || {}),
+                        [leaderboardKey]: {
+                            ...(existingData.leaderboards?.[leaderboardKey] || {}),
+                            [currentUser.name]: scoreData
+                        }
+                    }
+                };
+                
+                // Save to JSONBin.io
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_API_KEY
+                    },
+                    body: JSON.stringify(updatedData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to save score data');
+                }
+                
+                // Also save to localStorage as fallback
+                const leaderboardLocalKey = `leaderboard_${timeMode}`;
+                let leaderboard = JSON.parse(localStorage.getItem(leaderboardLocalKey) || {};
+                leaderboard[currentUser.name] = scoreData;
+                localStorage.setItem(leaderboardLocalKey, JSON.stringify(leaderboard));
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error saving score:', error);
+                throw error;
+            }
+        }
+
+        async function loadLeaderboard(timeMode) {
+            try {
+                // Try to get from JSONBin.io first
+                const data = await getJSONBinData();
+                const leaderboardKey = `leaderboard_${timeMode}`;
+                const leaderboardData = data.leaderboards?.[leaderboardKey] || {};
+                
+                // Convert to array and sort
+                const leaderboardArray = Object.entries(leaderboardData)
+                    .map(([name, entry]) => ({ name, ...entry }))
+                    .sort((a, b) => b.score - a.score || a.timestamp - b.timestamp);
+                
+                updateLeaderboardUI(leaderboardArray);
+            } catch (error) {
+                console.error('Error loading from JSONBin, using localStorage:', error);
+                // Fallback to localStorage
+                const leaderboardKey = `leaderboard_${timeMode}`;
+                const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey) || '{}';
+                const leaderboardArray = Object.entries(leaderboard)
+                    .map(([name, entry]) => ({ name, ...entry }))
+                    .sort((a, b) => b.score - a.score || a.timestamp - b.timestamp);
+                
+                updateLeaderboardUI(leaderboardArray);
+            }
+        }
+
+        function updateLeaderboardUI(leaderboardArray) {
             leaderboardList.innerHTML = '';
             
             if (leaderboardArray.length === 0) {
@@ -1347,63 +1307,147 @@
             });
             
             // Show current user's score if available
-            if (currentUser && leaderboard[currentUser.name]) {
-                userScoreValue.textContent = leaderboard[currentUser.name].score;
-                userScoreTime.textContent = `Mode: ${leaderboard[currentUser.name].timeMode || timeMode}-S`;
-                userScore.classList.add('show');
-            } else {
-                userScore.classList.remove('show');
+            if (currentUser) {
+                const userEntry = leaderboardArray.find(entry => entry.name === currentUser.name);
+                if (userEntry) {
+                    userScoreValue.textContent = userEntry.score;
+                    userScoreTime.textContent = `Mode: ${userEntry.timeMode || currentLeaderboardTime}-S`;
+                    userScore.classList.add('show');
+                } else {
+                    userScore.classList.remove('show');
+                }
             }
         }
-        
+
         function searchUser() {
             const searchTerm = searchInput.value.trim().toLowerCase();
             if (!searchTerm) return;
             
-            const leaderboardKey = getLeaderboardKey(currentLeaderboardTime);
-            const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || {};
+            const items = leaderboardList.querySelectorAll('.leaderboard-item');
+            let found = false;
             
-            // Find user in leaderboard
-            const userEntry = Object.entries(leaderboard).find(([name]) => 
-                name.toLowerCase() === searchTerm
-            );
-            
-            if (userEntry) {
-                const [name, data] = userEntry;
-                
-                // Highlight the user in the list
-                const items = leaderboardList.querySelectorAll('.leaderboard-item');
-                items.forEach(item => {
+            items.forEach(item => {
+                const name = item.querySelector('.leaderboard-name').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    item.classList.add('highlight');
+                    item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    found = true;
+                } else {
                     item.classList.remove('highlight');
-                    const itemName = item.querySelector('.leaderboard-name').textContent;
-                    if (itemName === name) {
-                        item.classList.add('highlight');
-                        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                });
-                
-                // Show user score
-                userScoreValue.textContent = data.score;
-                userScoreTime.textContent = `Mode: ${data.timeMode || currentLeaderboardTime}-S`;
-                userScore.classList.add('show');
-            } else {
+                }
+            });
+            
+            if (!found) {
                 alert('Nama tidak ditemukan di leaderboard');
-                userScore.classList.remove('show');
             }
         }
-        
-        function getLeaderboardKey(timeMode) {
-            const timeModes = {
-                10: 'leaderboard',
-                30: 'leaderboard1',
-                60: 'leaderboard2',
-                100: 'leaderboard3',
-                120: 'leaderboard4',
-                150: 'leaderboard5',
-                180: 'leaderboard6'
-            };
+
+        function switchPage(page) {
+            navItems.forEach(item => {
+                if (item.getAttribute('data-page') === page) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
             
-            return timeModes[timeMode] || 'leaderboard';
+            if (page === 'game') {
+                gamePage.classList.remove('hidden');
+                leaderboardPage.classList.add('hidden');
+            } else if (page === 'leaderboard') {
+                gamePage.classList.add('hidden');
+                leaderboardPage.classList.remove('hidden');
+            }
+        }
+
+        function startGame() {
+            if (!selectedTime) {
+                alert('Silakan pilih waktu terlebih dahulu');
+                return;
+            }
+            
+            score = 0;
+            timeLeft = selectedTime;
+            prevWords = [];
+            
+            scoreDisplay.textContent = score;
+            timerDisplay.textContent = timeLeft;
+            gameInput.disabled = false;
+            gameInput.value = '';
+            gameInput.classList.remove('error', 'correct');
+            gameInput.focus();
+            startBtn.disabled = true;
+            
+            updateWords(getRandomWord());
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function getRandomWord() {
+            return kataList[Math.floor(Math.random() * kataList.length)];
+        }
+
+        function updateWords(newWord) {
+            prevWords.push(newWord);
+            if (prevWords.length > 3) prevWords.shift();
+            
+            prev2Elem.textContent = prevWords[0] || '';
+            prev1Elem.textContent = prevWords[1] || '';
+            currentElem.textContent = prevWords[2] || '';
+            
+            // Add fade-in animation
+            prev2Elem.classList.add('fade-in');
+            prev1Elem.classList.add('fade-in');
+            currentElem.classList.add('fade-in');
+            
+            setTimeout(() => {
+                prev2Elem.classList.remove('fade-in');
+                prev1Elem.classList.remove('fade-in');
+                currentElem.classList.remove('fade-in');
+            }, 500);
+        }
+
+        function handleInput() {
+            const val = gameInput.value.trim();
+            const currentWord = currentElem.textContent;
+            
+            if (currentWord.startsWith(val)) {
+                gameInput.classList.remove('error');
+                gameInput.classList.add('correct');
+            } else {
+                gameInput.classList.remove('correct');
+                gameInput.classList.add('error');
+            }
+            
+            if (val === currentWord) {
+                score++;
+                scoreDisplay.textContent = score;
+                gameInput.value = '';
+                gameInput.classList.remove('error', 'correct');
+                updateWords(getRandomWord());
+            }
+        }
+
+        async function endGame() {
+            clearInterval(timerInterval);
+            gameInput.disabled = true;
+            startBtn.disabled = false;
+            
+            if (currentUser) {
+                try {
+                    await saveScore(score, selectedTime);
+                } catch (error) {
+                    console.error('Error saving score:', error);
+                }
+            }
         }
     </script>
 </body>
